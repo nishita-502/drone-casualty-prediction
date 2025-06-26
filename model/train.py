@@ -49,21 +49,32 @@ rf.fit(X_train, y_train)
 
 # 9. Evaluation function
 def evaluate_model(model, X_test, y_test, label):
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+    from sklearn.metrics import confusion_matrix, classification_report, accuracy_score, precision_score, recall_score, f1_score
+    import os
+
     y_pred = model.predict(X_test)
     cm = confusion_matrix(y_test, y_pred)
+
     print(f"\n📊 {label} Classification Report:")
     print(classification_report(y_test, y_pred))
     print(f"Accuracy: {accuracy_score(y_test, y_pred):.4f}")
     print(f"Precision: {precision_score(y_test, y_pred):.4f}")
     print(f"Recall: {recall_score(y_test, y_pred):.4f}")
     print(f"F1 Score: {f1_score(y_test, y_pred):.4f}")
+
+    # Save confusion matrix plot as PNG
+    os.makedirs("model/plots", exist_ok=True)
     plt.figure(figsize=(6, 4))
     sns.heatmap(cm, annot=True, fmt="d", cmap="Blues")
     plt.title(f"Confusion Matrix - {label}")
     plt.xlabel("Predicted")
     plt.ylabel("Actual")
     plt.tight_layout()
-    plt.show()
+    plt.savefig(f"model/plots/confusion_matrix_{label.replace(' ', '_').lower()}.png")
+    plt.close()
+
 
 # 10. Evaluate both
 evaluate_model(logreg, X_test, y_test, "Logistic Regression")
